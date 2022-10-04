@@ -1,5 +1,5 @@
-# import os
-# import re
+import os
+import re
 import string
 import random
 
@@ -9,6 +9,9 @@ from graph_template import Graph, Vertex
 def get_words_from_text(text_path: str) -> list[str]:
     with open(text_path, "r") as f:
         text = f.read()
+
+        # remove [text in here]
+        text = re.sub(r"\[.+\]", " ", text)
 
         # turn whitespace into just spaces
         # example: "      hello       world     ".split()
@@ -66,9 +69,18 @@ def compose(graph: Graph, words: list[str], length=50) -> list[str]:
     return composition
 
 
-def main() -> None:
+def main(artist: str) -> None:
     # get words from text
-    words = get_words_from_text("texts/hp_sorcerer_stone.txt")
+    # words = get_words_from_text("texts/hp_sorcerer_stone.txt")
+
+    # for song lyrics
+
+    part_songs_path = f"songs/{artist}"
+    words: list[str] = []
+
+    for song_file in os.listdir(part_songs_path):
+        song_words = get_words_from_text(f"{part_songs_path}/{song_file}")
+        words.extend(song_words)
 
     # make graph using those words
     graph = make_graph(words)
@@ -83,4 +95,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    main("drake")
